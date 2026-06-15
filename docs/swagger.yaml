@@ -1,0 +1,432 @@
+openapi: 3.0.0
+
+info:
+  title: UnaHur Anti-Social Net API
+  version: 1.0.0
+  description: API de red social académica con Users, Posts, Comments, Tags e Images
+
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Users
+  - name: Posts
+  - name: Comments
+  - name: Tags
+  - name: Images
+
+components:
+  schemas:
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    UserCreate:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    Post:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        user:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    PostCreate:
+      type: object
+      required: [title, content, user]
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        user:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+
+    Comment:
+      type: object
+      properties:
+        _id:
+          type: string
+        text:
+          type: string
+        user:
+          type: string
+        post:
+          type: string
+
+    CommentCreate:
+      type: object
+      required: [text, user, post]
+      properties:
+        text:
+          type: string
+        user:
+          type: string
+        post:
+          type: string
+
+    Tag:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+
+    TagCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+
+    PostImage:
+      type: object
+      properties:
+        _id:
+          type: string
+        url:
+          type: string
+        post:
+          type: string
+
+    PostImageCreate:
+      type: object
+      required: [url, post]
+      properties:
+        url:
+          type: string
+        post:
+          type: string
+
+paths:
+
+  # ---------------- USERS ----------------
+  /users:
+    get:
+      tags: [Users]
+      summary: Obtener usuarios (con filtros)
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: email
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de usuarios
+
+    post:
+      tags: [Users]
+      summary: Crear usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        "201":
+          description: Usuario creado
+
+  /users/{id}:
+    put:
+      tags: [Users]
+      summary: Actualizar usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        "200":
+          description: Usuario actualizado
+
+    delete:
+      tags: [Users]
+      summary: Eliminar usuario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Usuario eliminado
+
+  # ---------------- POSTS ----------------
+  /posts:
+    get:
+      tags: [Posts]
+      summary: Obtener posts (filtros por user/tag)
+      parameters:
+        - in: query
+          name: user
+          schema:
+            type: string
+        - in: query
+          name: tag
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de posts
+
+    post:
+      tags: [Posts]
+      summary: Crear post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreate'
+      responses:
+        "201":
+          description: Post creado
+
+  /posts/{id}:
+    put:
+      tags: [Posts]
+      summary: Actualizar post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCreate'
+      responses:
+        "200":
+          description: Post actualizado
+
+    delete:
+      tags: [Posts]
+      summary: Eliminar post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post eliminado
+
+  # ---------------- COMMENTS ----------------
+  /comments:
+    get:
+      tags: [Comments]
+      summary: Obtener comentarios (filtros)
+      parameters:
+        - in: query
+          name: post
+          schema:
+            type: string
+        - in: query
+          name: user
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista de comentarios
+
+    post:
+      tags: [Comments]
+      summary: Crear comentario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreate'
+      responses:
+        "201":
+          description: Comentario creado
+
+  /comments/{id}:
+    put:
+      tags: [Comments]
+      summary: Actualizar comentario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentCreate'
+      responses:
+        "200":
+          description: Comentario actualizado
+
+    delete:
+      tags: [Comments]
+      summary: Eliminar comentario
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comentario eliminado
+
+  # ---------------- TAGS ----------------
+  /tags:
+    get:
+      tags: [Tags]
+      summary: Obtener tags
+      responses:
+        "200":
+          description: Lista de tags
+
+    post:
+      tags: [Tags]
+      summary: Crear tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreate'
+      responses:
+        "201":
+          description: Tag creado
+
+  /tags/{id}:
+    put:
+      tags: [Tags]
+      summary: Actualizar tag
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreate'
+      responses:
+        "200":
+          description: Tag actualizado
+
+    delete:
+      tags: [Tags]
+      summary: Eliminar tag
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tag eliminado
+
+  # ---------------- IMAGES ----------------
+  /post-images:
+    get:
+      tags: [Images]
+      summary: Obtener imágenes
+      responses:
+        "200":
+          description: Lista de imágenes
+
+    post:
+      tags: [Images]
+      summary: Crear imagen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostImageCreate'
+      responses:
+        "201":
+          description: Imagen creada
+
+  /post-images/{id}:
+    put:
+      tags: [Images]
+      summary: Actualizar imagen
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostImageCreate'
+      responses:
+        "200":
+          description: Imagen actualizada
+
+    delete:
+      tags: [Images]
+      summary: Eliminar imagen
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Imagen eliminada
