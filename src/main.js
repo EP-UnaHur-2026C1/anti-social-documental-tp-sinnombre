@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/mongo.js";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
+import cors from "cors";
 
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
@@ -16,6 +17,7 @@ dotenv.config();
 const app = express();
 const swaggerDocument = YAML.load("./docs/swagger.yaml");
 
+app.use(cors());
 app.use(express.json());
 
 connectDB();

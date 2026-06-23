@@ -23,109 +23,237 @@ components:
       properties:
         _id:
           type: string
-        name:
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+        nickName:
           type: string
-        email:
+          example: "juanperez"
+        followers:
+          type: array
+          items:
+            type: string
+          example: ["64f1a2b3c4d5e6f7a8b9c0d2"]
+        following:
+          type: array
+          items:
+            type: string
+          example: ["64f1a2b3c4d5e6f7a8b9c0d3"]
+        createdAt:
           type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     UserCreate:
       type: object
-      required: [name, email, password]
+      required:
+        - nickName
       properties:
-        name:
+        nickName:
           type: string
-        email:
-          type: string
-        password:
-          type: string
+          example: "juanperez"
 
     Post:
       type: object
       properties:
         _id:
           type: string
-        title:
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+        description:
           type: string
-        content:
+          example: "Mi primer post en la red antisocial"
+        author:
           type: string
-        user:
-          type: string
+          description: ObjectId del usuario autor
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+        images:
+          type: array
+          items:
+            type: string
+          description: Array de ObjectId de PostImage
+          example: []
         tags:
           type: array
           items:
             type: string
+          description: Array de ObjectId de Tag
+          example: []
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     PostCreate:
       type: object
-      required: [title, content, user]
+      required:
+        - description
+        - author
       properties:
-        title:
+        description:
           type: string
-        content:
+          example: "Mi primer post en la red antisocial"
+        author:
           type: string
-        user:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
+          description: ObjectId del usuario autor
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
 
     Comment:
       type: object
       properties:
         _id:
           type: string
-        text:
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+        content:
           type: string
-        user:
+          example: "Muy buen post!"
+        author:
           type: string
-        post:
+          description: ObjectId del usuario autor
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+        postId:
           type: string
+          description: ObjectId del post al que pertenece
+          example: "64f1a2b3c4d5e6f7a8b9c0d3"
+        visible:
+          type: boolean
+          default: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     CommentCreate:
       type: object
-      required: [text, user, post]
+      required:
+        - content
+        - author
+        - postId
       properties:
-        text:
+        content:
           type: string
-        user:
+          example: "Muy buen post!"
+        author:
           type: string
-        post:
+          description: ObjectId del usuario autor
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+        postId:
           type: string
+          description: ObjectId del post al que pertenece
+          example: "64f1a2b3c4d5e6f7a8b9c0d3"
 
     Tag:
       type: object
       properties:
         _id:
           type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
         name:
           type: string
+          example: "tecnologia"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     TagCreate:
       type: object
-      required: [name]
+      required:
+        - name
       properties:
         name:
           type: string
+          example: "tecnologia"
 
     PostImage:
       type: object
       properties:
         _id:
           type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
         url:
           type: string
-        post:
+          example: "https://ejemplo.com/imagen.jpg"
+        postId:
           type: string
+          description: ObjectId del post al que pertenece
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     PostImageCreate:
       type: object
-      required: [url, post]
+      required:
+        - url
+        - postId
       properties:
         url:
           type: string
-        post:
+          example: "https://ejemplo.com/imagen.jpg"
+        postId:
           type: string
+          description: ObjectId del post al que pertenece
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+
+    PostTagRelation:
+      type: object
+      required:
+        - postId
+        - tagId
+      properties:
+        postId:
+          type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+        tagId:
+          type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+
+    PostImageRelation:
+      type: object
+      required:
+        - postId
+        - imageId
+      properties:
+        postId:
+          type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+        imageId:
+          type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+
+    FollowRelation:
+      type: object
+      required:
+        - followerId
+        - followedId
+      properties:
+        followerId:
+          type: string
+          description: ObjectId del usuario que sigue
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+        followedId:
+          type: string
+          description: ObjectId del usuario a seguir
+          example: "64f1a2b3c4d5e6f7a8b9c0d2"
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Error interno del servidor"
 
 paths:
 
@@ -133,19 +261,16 @@ paths:
   /users:
     get:
       tags: [Users]
-      summary: Obtener usuarios (con filtros)
-      parameters:
-        - in: query
-          name: name
-          schema:
-            type: string
-        - in: query
-          name: email
-          schema:
-            type: string
+      summary: Obtener todos los usuarios
       responses:
         "200":
           description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
 
     post:
       tags: [Users]
@@ -159,8 +284,40 @@ paths:
       responses:
         "201":
           description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: nickName es obligatorio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /users/{id}:
+    get:
+      tags: [Users]
+      summary: Obtener usuario por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "64f1a2b3c4d5e6f7a8b9c0d1"
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Id inválido
+        "404":
+          description: Usuario no encontrado
+
     put:
       tags: [Users]
       summary: Actualizar usuario
@@ -179,6 +336,14 @@ paths:
       responses:
         "200":
           description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Id inválido
+        "404":
+          description: Usuario no encontrado
 
     delete:
       tags: [Users]
@@ -192,24 +357,61 @@ paths:
       responses:
         "200":
           description: Usuario eliminado
+        "400":
+          description: Id inválido
+        "404":
+          description: Usuario no encontrado
+
+  /users/follow:
+    post:
+      tags: [Users]
+      summary: Seguir a un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowRelation'
+      responses:
+        "200":
+          description: Seguimiento registrado
+        "400":
+          description: IDs inválidos o ya seguís a este usuario
+        "404":
+          description: Usuario no encontrado
+
+  /users/unfollow:
+    delete:
+      tags: [Users]
+      summary: Dejar de seguir a un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FollowRelation'
+      responses:
+        "200":
+          description: Seguimiento eliminado
+        "400":
+          description: IDs inválidos
+        "404":
+          description: Usuario no encontrado
 
   # ---------------- POSTS ----------------
   /posts:
     get:
       tags: [Posts]
-      summary: Obtener posts (filtros por user/tag)
-      parameters:
-        - in: query
-          name: user
-          schema:
-            type: string
-        - in: query
-          name: tag
-          schema:
-            type: string
+      summary: Obtener todos los posts
       responses:
         "200":
           description: Lista de posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
 
     post:
       tags: [Posts]
@@ -223,8 +425,35 @@ paths:
       responses:
         "201":
           description: Post creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        "400":
+          description: description o author obligatorios
 
   /posts/{id}:
+    get:
+      tags: [Posts]
+      summary: Obtener post por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        "400":
+          description: Id inválido
+        "404":
+          description: Post no encontrado
+
     put:
       tags: [Posts]
       summary: Actualizar post
@@ -243,6 +472,10 @@ paths:
       responses:
         "200":
           description: Post actualizado
+        "400":
+          description: Id inválido
+        "404":
+          description: Post no encontrado
 
     delete:
       tags: [Posts]
@@ -256,24 +489,90 @@ paths:
       responses:
         "200":
           description: Post eliminado
+        "400":
+          description: Id inválido
+        "404":
+          description: Post no encontrado
+
+  /posts/add-tag:
+    post:
+      tags: [Posts]
+      summary: Agregar tag a un post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTagRelation'
+      responses:
+        "200":
+          description: Tag agregado al post
+        "404":
+          description: Post o Tag no encontrado
+
+  /posts/remove-tag:
+    delete:
+      tags: [Posts]
+      summary: Quitar tag de un post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTagRelation'
+      responses:
+        "200":
+          description: Tag removido del post
+        "404":
+          description: Post o Tag no encontrado
+
+  /posts/add-image:
+    post:
+      tags: [Posts]
+      summary: Agregar imagen a un post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostImageRelation'
+      responses:
+        "200":
+          description: Imagen agregada al post
+        "404":
+          description: Post o imagen no encontrada
+
+  /posts/remove-image:
+    delete:
+      tags: [Posts]
+      summary: Quitar imagen de un post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostImageRelation'
+      responses:
+        "200":
+          description: Imagen removida del post
+        "404":
+          description: Post o imagen no encontrada
 
   # ---------------- COMMENTS ----------------
   /comments:
     get:
       tags: [Comments]
-      summary: Obtener comentarios (filtros)
-      parameters:
-        - in: query
-          name: post
-          schema:
-            type: string
-        - in: query
-          name: user
-          schema:
-            type: string
+      summary: Obtener comentarios visibles
+      description: Solo devuelve comentarios dentro del rango de meses configurado en COMMENTS_VISIBLE_MONTHS
       responses:
         "200":
           description: Lista de comentarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
 
     post:
       tags: [Comments]
@@ -287,8 +586,35 @@ paths:
       responses:
         "201":
           description: Comentario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "400":
+          description: content, author o postId obligatorios
 
   /comments/{id}:
+    get:
+      tags: [Comments]
+      summary: Obtener comentario por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comentario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "400":
+          description: Id inválido
+        "404":
+          description: Comentario no encontrado
+
     put:
       tags: [Comments]
       summary: Actualizar comentario
@@ -307,6 +633,10 @@ paths:
       responses:
         "200":
           description: Comentario actualizado
+        "400":
+          description: Id inválido
+        "404":
+          description: Comentario no encontrado
 
     delete:
       tags: [Comments]
@@ -320,15 +650,25 @@ paths:
       responses:
         "200":
           description: Comentario eliminado
+        "400":
+          description: Id inválido
+        "404":
+          description: Comentario no encontrado
 
   # ---------------- TAGS ----------------
   /tags:
     get:
       tags: [Tags]
-      summary: Obtener tags
+      summary: Obtener todos los tags
       responses:
         "200":
           description: Lista de tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
 
     post:
       tags: [Tags]
@@ -342,8 +682,35 @@ paths:
       responses:
         "201":
           description: Tag creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        "400":
+          description: Nombre del tag obligatorio
 
   /tags/{id}:
+    get:
+      tags: [Tags]
+      summary: Obtener tag por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tag encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        "400":
+          description: Id inválido
+        "404":
+          description: Tag no encontrado
+
     put:
       tags: [Tags]
       summary: Actualizar tag
@@ -362,6 +729,10 @@ paths:
       responses:
         "200":
           description: Tag actualizado
+        "400":
+          description: Id inválido
+        "404":
+          description: Tag no encontrado
 
     delete:
       tags: [Tags]
@@ -375,15 +746,25 @@ paths:
       responses:
         "200":
           description: Tag eliminado
+        "400":
+          description: Id inválido
+        "404":
+          description: Tag no encontrado
 
   # ---------------- IMAGES ----------------
-  /post-images:
+  /images:
     get:
       tags: [Images]
-      summary: Obtener imágenes
+      summary: Obtener todas las imágenes
       responses:
         "200":
           description: Lista de imágenes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostImage'
 
     post:
       tags: [Images]
@@ -397,8 +778,35 @@ paths:
       responses:
         "201":
           description: Imagen creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostImage'
+        "400":
+          description: url o postId obligatorios
 
-  /post-images/{id}:
+  /images/{id}:
+    get:
+      tags: [Images]
+      summary: Obtener imagen por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Imagen encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostImage'
+        "400":
+          description: Id inválido
+        "404":
+          description: Imagen no encontrada
+
     put:
       tags: [Images]
       summary: Actualizar imagen
@@ -417,6 +825,10 @@ paths:
       responses:
         "200":
           description: Imagen actualizada
+        "400":
+          description: Id inválido
+        "404":
+          description: Imagen no encontrada
 
     delete:
       tags: [Images]
@@ -430,3 +842,7 @@ paths:
       responses:
         "200":
           description: Imagen eliminada
+        "400":
+          description: Id inválido
+        "404":
+          description: Imagen no encontrada

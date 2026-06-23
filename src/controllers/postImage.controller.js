@@ -1,33 +1,77 @@
-import PostImage from "../models/PostImage.js";
+import PostImage from '../models/PostImage.js'
+import Post from '../models/Post.js'
 
-export const getImages = async (req,res)=>{
-    res.json(await PostImage.find());
-};
+export const getImages = async (req, res) => {
+  try {
+    const images = await PostImage.find().populate('postId')
+    res.status(200).json(images)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 
-export const getImageById = async (req,res)=>{
-    res.json(await PostImage.findById(req.params.id));
-};
+export const getImageById = async (req, res) => {
+  try {
+    const image = await PostImage.findById(req.params.id).populate('postId')
+    if (!image) {
+      return res.status(404).json({ message: 'Imagen no encontrada' })
+    }
+    res.status(200).json(image)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 
-export const createImage = async (req,res)=>{
-    res.status(201).json(await PostImage.create(req.body));
-};
+export const createImage = async (req, res) => {
+  try {
+    const { url, postId } = req.body
 
-export const updateImage = async (req,res)=>{
+    // Crear la imagen
+    const image = await PostImage.create({ url, postId })
 
-    res.json(
-        await PostImage.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new:true }
-        )
-    );
-};
+    // Agregar automáticamente el ID al array images del post
+    await Post.findByIdAndUpdate(
+      postId,
+      { $push: { images: image._id } }
+    )
 
-export const deleteImage = async (req,res)=>{
+    res.status(201).json(image)
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+}
 
-    await PostImage.findByIdAndDelete(req.params.id);
+export const updateImage = async (req, res) => {
+  try {
+    const image = await PostImage.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    )
+    if (!image) {
+      return res.status(404).json({ message: 'Imagen no encontrada' })
+    }
+    res.status(200).json(image)
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+}
 
-    res.json({
-        message:"Imagen eliminada"
-    });
-};
+export const deleteImage = async (req, res) => {
+  try {
+    const image = await PostImage.findByIdAndDelete(req.params.id)
+    if (!image) {
+      return res.status(404).json({ message: 'Imagen no encontrada' })
+    }
+
+    // Sacar el ID del array images del post
+    await Post.findByIdAndUpdate(
+      image.postId,
+      { $pull: { images: image._id } }
+    )
+
+    res.status(200).json({ message: 'Imagen eliminada' })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}

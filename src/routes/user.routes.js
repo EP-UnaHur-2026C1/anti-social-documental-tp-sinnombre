@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { loginUser, verifyEmail } from "../controllers/user.controller.js";
 
 import {
     getUsers,
@@ -16,39 +17,15 @@ import { validateUser } from "../middlewares/validateUser.js";
 const router = Router();
 
 router.get("/", getUsers);
+router.post("/login", loginUser);
+router.post("/", validateUser, createUser);
+router.get("/verify/:token", verifyEmail); 
 
-router.get(
-    "/:id",
-    validateObjectId,
-    getUserById
-);
+router.post("/follow", followUser);
+router.delete("/unfollow", unfollowUser);
 
-router.post(
-    "/",
-    validateUser,
-    createUser
-);
-
-router.put(
-    "/:id",
-    validateObjectId,
-    updateUser
-);
-
-router.delete(
-    "/:id",
-    validateObjectId,
-    deleteUser
-);
-
-router.post(
-    "/follow",
-    followUser
-);
-
-router.delete(
-    "/unfollow",
-    unfollowUser
-);
+router.get("/:id", validateObjectId, getUserById);
+router.put("/:id", validateObjectId, updateUser);
+router.delete("/:id", validateObjectId, deleteUser);
 
 export default router;
